@@ -6,8 +6,11 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from './webpack.config.js';
 
-const isDeveloping = process.env.NODE_ENV !== 'production';
-const port = isDeveloping ? 3000 : process.env.PORT;
+const isDeveloping  = process.env.NODE_ENV !== 'production';
+const port          = isDeveloping ? 3000 : process.env.PORT;
+const falcorExpress = require('falcor-express');
+const Router        = require('falcor-router');
+
 const app = express();
 
 if (isDeveloping) {
@@ -27,10 +30,26 @@ if (isDeveloping) {
 
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
+
+  app.use('/model.json', falcorExpress.dataSourceRoute(function (req, res) {
+    // create a Virtual JSON resource with single key ("greeting")
+    return new Router([
+      {
+        // match a request for the key "greeting"
+        route: "greeting",
+        // respond with a PathValue with the value of "Hello World."
+        get: function() {
+          return {path:["greeting"], value: "Hello World"};
+        }
+      }
+    ]);
+  }));
+
   app.get('*', function response(req, res) {
     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/index.html')));
     res.end();
   });
+  
 } else {
   app.use(express.static(__dirname + '/dist'));
   app.get('*', function response(req, res) {
@@ -38,7 +57,7 @@ if (isDeveloping) {
   });
 }
 
-app.listen(port, '0.0.0.0', function onStart(err) {
+app.listen(port, '127.0.0.1', function onStart(err) {
   if (err) {
     console.log(err);
   }
