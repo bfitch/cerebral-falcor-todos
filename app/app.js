@@ -2,7 +2,7 @@ import React from 'react';
 import {Decorator as Cerebral} from 'cerebral-react';
 
 @Cerebral({
-  greeting: ['greeting']
+  todos: ['todos']
 })
 class App extends React.Component {
   componentDidMount() {
@@ -10,11 +10,14 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.props.greeting}
-      </div>
-    );
+    if (this.props.todos) {
+      const todos = Object.keys(this.props.todos).map(id => <li key={id}>{this.props.todos[id].title}</li>);
+      return (
+        <ul>{todos}</ul>
+      );
+    } else {
+      return <p>Loading</p>;
+    }
   }
 }
 
