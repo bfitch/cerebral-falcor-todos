@@ -1,30 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import controller from './controller';
-import {Container} from 'cerebral-react';
+import {Container} from './container';
 import App from './app';
 import cache from './falcor_cache';
 
 const model = new falcor.Model({
-  cache: cache
-  // source: new falcor.HttpDataSource('/model.json')
+  // cache: cache,
+  onChange: function(x) {
+    console.log('change');
+  },
+  source: new falcor.HttpDataSource('/model.json')
 });
 
 const getTodosLength = (input, state, output) => {
   model.
-    getValue('todos.length').
+    get(['todos', 'length']).
     then((response) => {
-      output({todosLength: response});
+      output({todosLength: response.json.todos});
     });
 }
 
 const getTodos = (input, state, output) => {
-  const length = state.get('todosLength') - 1;
+  const length = state.get('todosLength');
 
   model.
-    get(['todos', {from: 0, to: length}, 'title']).
+    get(['todosById', {from: 1, to: length}, 'title']).
     then((response) => {
-      output({todos: response.json.todos});
+      output({todos: response.json.todosById});
+    }).
+    catch((response) => {
+      debugger
+    });
+}
+
+const createTodo = (input, state, output) => {
+  const length = state.get('todosLength');
+
+  model.setValue(['todos', length, 'title'], input.title).
+    then((response) => {
+      output();
     });
 }
 
@@ -41,7 +56,15 @@ controller.signal('appMounted', [
   [getTodos], set('todos')
 ]);
 
+controller.signal('todoTextEntered', [
+  [createTodo],
+  (input, state) => {
+    const todo = { 3: { title: input.title } }
+    state.merge('todos', todo);
+  }
+]);
+
 ReactDOM.render(
-  <Container controller={controller}><App/></Container>,
+  <Container controller={controller} falcor={model}><App/></Container>,
   document.getElementById('root')
 );

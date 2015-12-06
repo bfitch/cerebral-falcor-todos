@@ -8,8 +8,11 @@ import config from './webpack.config.js';
 
 const isDeveloping  = process.env.NODE_ENV !== 'production';
 const port          = isDeveloping ? 3000 : process.env.PORT;
+
 const falcorExpress = require('falcor-express');
 const Router        = require('falcor-router');
+const _             = require('underscore');
+let data            = require('./app/falcor_cache');
 
 const app = express();
 
@@ -31,17 +34,46 @@ if (isDeveloping) {
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
 
+  function buildPathSetResults(resource, index, attrs) {
+    const attributes = _.isArray(attrs) ? attrs : [attrs];
+
+    return _.reduce(attributes, (memo,attr) => {
+      return memo.concat({
+        path:  [resource, index, attr],
+        value: data[resource][index][attr]
+      });
+    }, []);
+  }
+
   app.use('/model.json', falcorExpress.dataSourceRoute(function (req, res) {
-    // create a Virtual JSON resource with single key ("greeting")
     return new Router([
       {
-        // match a request for the key "greeting"
-        route: "greeting",
-        // respond with a PathValue with the value of "Hello World."
-        get: function() {
-          return {path:["greeting"], value: "Hello World"};
+        route: "todos.length",
+        get: function(pathSet) {
+          const [resource, attrs] = pathSet;
+
+          return {
+            path: [resource], value: data[resource].length
+          };
         }
-      }
+      },
+      {
+        route: "todosById[{integers:indices}]['title']",
+        get: function(pathSet) {
+          const [resource, range, attrs] = pathSet;
+
+          return _.flatten(_.map(pathSet.indices, (index) => {
+            return buildPathSetResults(resource, index, attrs);
+          }));
+        }
+      },
+      // {
+      //   route: "todos[{integers:todoIds}]['user']['first_name', 'last_name']",
+      //   get: function(pathSet) {
+      //     return {
+      //     };
+      //   }
+      // }
     ]);
   }));
 

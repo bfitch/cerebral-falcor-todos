@@ -1,24 +1,22 @@
-const $ref = falcor.Model.ref;
-
 export default {
   usersById: {
-    '1': {
+    1: {
       first_name: 'Bob',
       last_name: 'Slob'
     },
-    '2': {
+    2: {
       first_name: 'Jane',
       last_name: 'Pain'
     }
   },
 
   todosById: {
-    '1': {
+    1: {
       title: 'foo',
       completed: false,
       user: { $type: 'ref', value: ['usersById', 1] }
     },
-    '2': {
+    2: {
       title: 'boo',
       completed: true,
       user: { $type: 'ref', value: ['usersById', 2] }
