@@ -25,9 +25,9 @@ const getTodos = (input, state, output) => {
   const length = state.get('todosLength');
 
   model.
-    get(['todosById', {from: 1, to: length}, 'title']).
+    get(['todos', {from: 0, to: 1}, 'title']).
     then((response) => {
-      output({todos: response.json.todosById});
+      output({todos: response.json.todos});
     }).
     catch((response) => {
       debugger
@@ -37,7 +37,7 @@ const getTodos = (input, state, output) => {
 const createTodo = (input, state, output) => {
   const length = state.get('todosLength');
 
-  model.setValue(['todos', length, 'title'], input.title).
+  model.set(falcor.pathValue(['todosById', 'title'], input.title)).
     then((response) => {
       output();
     });

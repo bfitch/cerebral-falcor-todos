@@ -7,7 +7,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from './webpack.config.js';
 
 const isDeveloping  = process.env.NODE_ENV !== 'production';
-const port          = isDeveloping ? 3000 : process.env.PORT;
+const port          = isDeveloping ? 3002 : process.env.PORT;
 
 const falcorExpress = require('falcor-express');
 const Router        = require('falcor-router');
@@ -34,10 +34,21 @@ if (isDeveloping) {
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
 
+  function buildRefPathSetResults(resource, index, attrs) {
+    const attributes = _.isArray(attrs) ? attrs : [attrs];
+
+    return _.reduce(attributes, (memo, attr) => {
+      return memo.concat({
+        path:  [resource, index],
+        value: data[resource][index]
+      });
+    }, []);
+  }
+
   function buildPathSetResults(resource, index, attrs) {
     const attributes = _.isArray(attrs) ? attrs : [attrs];
 
-    return _.reduce(attributes, (memo,attr) => {
+    return _.reduce(attributes, (memo, attr) => {
       return memo.concat({
         path:  [resource, index, attr],
         value: data[resource][index][attr]
@@ -52,28 +63,31 @@ if (isDeveloping) {
         get: function(pathSet) {
           const [resource, attrs] = pathSet;
 
-          return {
-            path: [resource], value: data[resource].length
-          };
+          return [{
+            path: [resource, attrs], value: data[resource].length
+          }];
         }
       },
       {
-        route: "todosById[{integers:indices}]['title']",
+        route: "todos[{integers:indices}]",
         get: function(pathSet) {
           const [resource, range, attrs] = pathSet;
 
           return _.flatten(_.map(pathSet.indices, (index) => {
-            return buildPathSetResults(resource, index, attrs);
+            return buildRefPathSetResults(resource, index, attrs);
           }));
         }
       },
-      // {
-      //   route: "todos[{integers:todoIds}]['user']['first_name', 'last_name']",
-      //   get: function(pathSet) {
-      //     return {
-      //     };
-      //   }
-      // }
+      {
+        route: "todosById[{integers:ids}]['title']",
+        get: function(pathSet) {
+          const [resource, range, attrs] = pathSet;
+
+          return _.flatten(_.map(pathSet.ids, (index) => {
+            return buildPathSetResults(resource, index, attrs);
+          }));
+        }
+      }
     ]);
   }));
 
