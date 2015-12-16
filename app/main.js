@@ -7,9 +7,6 @@ import cache from './falcor_cache';
 
 const model = new falcor.Model({
   // cache: cache,
-  onChange: function(x) {
-    console.log('change');
-  },
   source: new falcor.HttpDataSource('/model.json')
 });
 
@@ -17,15 +14,15 @@ const getTodosLength = (input, state, output) => {
   model.
     get(['todos', 'length']).
     then((response) => {
-      output({todosLength: response.json.todos});
+      output({todosLength: response.json.todos.length});
     });
 }
 
 const getTodos = (input, state, output) => {
-  const length = state.get('todosLength');
+  const length = state.get('todosLength') - 1;
 
   model.
-    get(['todos', {from: 0, to: 1}, 'title']).
+    get(['todos', {from: 0, to: length}, 'title']).
     then((response) => {
       output({todos: response.json.todos});
     }).
@@ -35,11 +32,13 @@ const getTodos = (input, state, output) => {
 }
 
 const createTodo = (input, state, output) => {
-  const length = state.get('todosLength');
-
-  model.set(falcor.pathValue(['todosById', 'title'], input.title)).
+  model.call(['todos', 'add'], [input.title], ['title']).
     then((response) => {
-      output();
+      const index = response.json.todos.length - 1;
+      output(response.json.todos[index].title);
+    }).
+    catch((response) => {
+      debugger
     });
 }
 
@@ -59,9 +58,11 @@ controller.signal('appMounted', [
 controller.signal('todoTextEntered', [
   [createTodo],
   (input, state) => {
-    const todo = { 3: { title: input.title } }
+    const id = parseInt((Math.random() * 100), 10);
+    const todo = { [id]: { title: input.title } }
     state.merge('todos', todo);
-  }
+  },
+  [getTodosLength], set('todosLength')
 ]);
 
 ReactDOM.render(

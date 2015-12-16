@@ -23,6 +23,8 @@ export default {
     }
   },
 
+  names: [],
+
   todos: [
     { $type: 'ref', value: ['todosById', 1] },
     { $type: 'ref', value: ['todosById', 2] }

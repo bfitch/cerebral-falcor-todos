@@ -26,7 +26,12 @@ export default class App extends React.Component {
         </div>
       );
     } else {
-      return <p>Loading</p>;
+      return (
+        <div>
+          <input onKeyDown={this.textEntered.bind(this)} />
+          <p>Loading</p>
+        </div>
+      );
     }
   }
 }

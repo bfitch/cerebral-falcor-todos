@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "baobab": "^2.1.1",
+    "body-parser": "^1.14.1",
     "cerebral": "^0.25.1",
     "cerebral-addons": "^0.1.2",
     "cerebral-baobab": "^0.4.2",

@@ -11,6 +11,7 @@ const port          = isDeveloping ? 3002 : process.env.PORT;
 
 const falcorExpress = require('falcor-express');
 const Router        = require('falcor-router');
+const bodyParser    = require('body-parser');
 const _             = require('underscore');
 let data            = require('./app/falcor_cache');
 
@@ -31,6 +32,7 @@ if (isDeveloping) {
     }
   });
 
+  app.use(bodyParser.urlencoded({extended: false}));
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
 
@@ -56,8 +58,29 @@ if (isDeveloping) {
     }, []);
   }
 
-  app.use('/model.json', falcorExpress.dataSourceRoute(function (req, res) {
+  app.use('/model.json', falcorExpress.dataSourceRoute(function(req, res) {
     return new Router([
+      {
+        route: "todos.add",
+        call: (callPath, args) => {
+          const title = args[0];
+          const id = _.random(1,100);
+
+          _.extend(data.todosById, {[id]: {title: title, completed: false}});
+          data.todos.push({$type: 'ref', value: ['todosById', id]});
+
+          return [
+            {
+              path: ['todos', data.todos.length - 1, 'title'],
+              value: {$type: "ref", value: ["todosById", id]}
+            },
+            {
+              path: ['todos', 'length'],
+              value: data.todos.length
+            }
+          ]
+        }
+      },
       {
         route: "todos.length",
         get: function(pathSet) {
