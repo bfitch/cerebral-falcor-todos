@@ -71,23 +71,23 @@ if (isDeveloping) {
 
           return [
             {
-              path: ['todos', data.todos.length - 1, 'title'],
+              path: ['todos', data.todos.length - 1],
               value: {$type: "ref", value: ["todosById", id]}
             },
             {
-              path: ['todos', 'length'],
+              path: ['todosLength'],
               value: data.todos.length
             }
           ]
         }
       },
       {
-        route: "todos.length",
+        route: "todosLength",
         get: function(pathSet) {
           const [resource, attrs] = pathSet;
 
           return [{
-            path: [resource, attrs], value: data[resource].length
+            path: ['todosLength'], value: data['todos'].length
           }];
         }
       },
