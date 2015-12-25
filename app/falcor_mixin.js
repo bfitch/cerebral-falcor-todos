@@ -10,6 +10,7 @@ const Mixin = {
   componentWillMount: function () {
     this.signals = this.context.controller.signals;
     this.falcor  = this.context.falcor;
+    this.queries = []
 
     if (!this.getStatePaths) {
       return;
@@ -28,7 +29,14 @@ const Mixin = {
       });
     }
     callbacks.push(this._update);
+
+    var queries  = this.getQueries ? this.getQueries() : [];
+    this.queries = this.queries.concat(queries);
+
     this._update();
+  },
+  componentDidMount: function() {
+    debugger
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
@@ -73,17 +81,9 @@ const Mixin = {
       }
       return newState;
     }, newState);
-    
-    const queryKey = Object.keys(this.getQueryPaths())[0];
-    const query    = this.getQueryPaths()[queryKey];
 
-    this.falcor.
-      get(query).
-      then((response) => {
-        newState[queryKey] = response.json[queryKey];
-        this.setState(newState);
-      });
-    }
+    this.setState(newState);
   }
+};
 
 export {Mixin};

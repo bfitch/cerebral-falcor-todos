@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import controller from './controller';
+import {controller, falcor} from './controller';
 import {Container} from './container';
 import App from './app';
 
@@ -43,6 +43,6 @@ controller.signal('todoTextEntered', [
 ]);
 
 ReactDOM.render(
-  <Container controller={controller}><App/></Container>,
+  <Container controller={controller} falcor={falcor}><App/></Container>,
   document.getElementById('root')
 );

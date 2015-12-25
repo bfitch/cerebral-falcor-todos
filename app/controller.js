@@ -15,4 +15,6 @@ falcorModel._root.onChange = function() {
   falcorChanges.forEach(change => model.tree.set(change.path, change.rhs));
 }
 
-export default Controller(model, {model: falcorModel});
+const controller = Controller(model, {model: falcorModel});
+
+export {controller, falcorModel};
