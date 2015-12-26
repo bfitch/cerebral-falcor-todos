@@ -4,7 +4,7 @@ const Container = React.createClass({
   displayName: 'CerebralContainer',
   childContextTypes: {
     controller: React.PropTypes.object.isRequired,
-    falcor: React.PropTypes.instanceOf(falcor.Model)
+    falcorModel: React.PropTypes.instanceOf(falcor.Model)
   },
   componentDidMount: function () {
     this.props.controller.devtools.start();
@@ -12,7 +12,7 @@ const Container = React.createClass({
   getChildContext: function () {
     return {
       controller: this.props.controller,
-      falcor: this.props.falcor
+      falcorModel: this.props.falcorModel
     }
   },
   render: function () {

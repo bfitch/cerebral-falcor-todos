@@ -9,15 +9,7 @@ const App = React.createClass({
   },
 
   getQueries() {
-    return ["poop", "swoop"]
-  },
-
-  getInitialState() {
-    return { todos: []};
-  },
-
-  componentDidMount() {
-    this.signals.appMounted();
+    return [['todosLength'], ['todos', {from: 0, to: 5}, 'title']];
   },
 
   textEntered(event) {
