@@ -1,15 +1,16 @@
 import React from 'react';
-import {Mixin} from './falcor_mixin';
+import Mixin from './falcor_mixin';
+import QueriesMixin from './queries_mixin';
 
 const App = React.createClass({
-  mixins: [Mixin],
+  mixins: [Mixin, QueriesMixin],
   
   getStatePaths() {
     return { todos: ['todos'] };
   },
 
-  getQueries() {
-    return [['todosLength'], ['todos', {from: 0, to: 5}, 'title']];
+  queries() {
+    return [['todosLength'], ['todos', {from: 0, to: 1}, 'title']];
   },
 
   textEntered(event) {

@@ -15,6 +15,15 @@ falcorModel._root.onChange = function() {
   falcorChanges.forEach(change => model.tree.set(change.path, change.rhs));
 }
 
-const controller = Controller(model, {model: falcorModel});
 
-export {controller, falcorModel};
+function call(path, key, attrs) {
+  return (input, state, output, services) => {
+    return falcorModel.call(path, [input[key]], attrs).
+      then(response => output()).
+      catch(response => { debugger });
+  }
+}
+
+const controller = Controller(model);
+
+export {controller, falcorModel, call};
