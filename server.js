@@ -64,7 +64,7 @@ if (isDeveloping) {
         route: "todos.add",
         call: (callPath, args) => {
           const title = args[0];
-          const id = _.random(1,100);
+          const id = _.random(1,10000);
 
           _.extend(data.todosById, {[id]: {title: title, completed: false}});
           data.todos.push({$type: 'ref', value: ['todosById', id]});

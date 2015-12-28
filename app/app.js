@@ -1,25 +1,21 @@
 import React from 'react';
 import Mixin from './falcor_mixin';
-import QueriesMixin from './queries_mixin';
 
 const App = React.createClass({
-  mixins: [Mixin, QueriesMixin],
+  mixins: [Mixin],
   
   getStatePaths() {
     return { todos: ['todos'] };
   },
-
-  queries() {
-    return [['todosLength'], ['todos', {from: 0, to: 1}, 'title']];
+  componentDidMount: function() {
+    this.signals.appMounted();
   },
-
   textEntered(event) {
     if (event.keyCode === 13) {
       this.signals.todoTextEntered.sync({title: event.target.value});
       event.target.value = '';
     }
   },
-
   render() {
     if (this.state.todos) {
       const todos = Object.keys(this.state.todos).map((id) => {

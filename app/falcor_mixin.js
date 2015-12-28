@@ -4,13 +4,10 @@ let listener = false;
 
 const Mixin = {
   contextTypes: {
-    controller: React.PropTypes.object,
-    falcorModel: React.PropTypes.instanceOf(falcor.Model),
-    queries: React.PropTypes.array
+    controller: React.PropTypes.object
   },
   componentWillMount: function () {
-    this.signals     = this.context.controller.signals;
-    this.falcorModel = this.context.falcorModel;
+    this.signals = this.context.controller.signals;
 
     if (!this.getStatePaths) {
       return;
@@ -31,13 +28,6 @@ const Mixin = {
     callbacks.push(this._update);
 
     this._update();
-  },
-
-  componentDidMount: function() {
-    this.falcorModel.
-      get(...this.context.queries).
-      then(()=>{this._update()}).
-      catch(response => { debugger });
   },
 
   componentWillUnmount: function () {
