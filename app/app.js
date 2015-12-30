@@ -22,14 +22,14 @@ export default class App extends React.Component {
 
       return (
         <div>
-          <input onKeyDown={this.textEntered} />
+          <input onKeyDown={this.textEntered.bind(this)} />
           <ul>{todos}</ul>
         </div>
       );
     } else {
       return (
         <div>
-          <input onKeyDown={this.textEntered} />
+          <input />
           <p>Loading</p>
         </div>
       );
