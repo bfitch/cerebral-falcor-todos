@@ -3,24 +3,23 @@ import ReactDOM from 'react-dom';
 import {Container} from './container';
 import App from './app';
 import {controller, model} from './controller';
-import falcorService from '../lib/falcor-service';
-const {get, call, falcorGet} = falcorService(model);
+import FalcorModule from '../lib/falcor-service';
+import {getTodos, getTodosLength, createTodo} from './actions';
 
-const getTodos = (input, state, output) => {
-  const length = state.get('todosLength') - 1;
-
-  falcorGet(['todos', {from: 0, to: length}, 'title']).
-    then(response => output()).
-    catch(response => { debugger });
-}
+controller.extends({
+  falcor: FalcorModule({
+    source: '/model.json',
+    model: model
+  })
+});
 
 controller.signal('appMounted', [
-  [get(['todosLength'])],
+  [getTodosLength],
   [getTodos]
 ]);
 
 controller.signal('todoTextEntered', [
-  [call(['todos', 'add'], 'title', ['title'])]
+  [createTodo]
 ]);
 
 ReactDOM.render(
