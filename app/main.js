@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Container} from 'cerebral-react';
 import {controller, model} from './controller';
 import App from './app';
-import FalcorModule from './modules/falcor/module';
+import FalcorModule from 'cerebral-falcor-module';
 import {getTodos, getTodosLength, createTodo} from './actions';
 
 controller.register({
