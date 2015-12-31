@@ -17,10 +17,14 @@ export default function(options, expandCache=_expandCache, diff=_diff) {
   }
 
   return {
-    init(controller, name) {
-      controller.services[name] = {
-        get(query)                                       { return falcorModel.get(query) },
-        call(functionPath, args, refPaths, thisPaths=[]) { return falcorModel.call(functionPath, args, refPaths, thisPaths) }
+    init({name, controller}) {
+    },
+    services: {
+      get(query) {
+        return falcorModel.get(query)
+      },
+      call(functionPath, args, refPaths, thisPaths=[]) {
+        return falcorModel.call(functionPath, args, refPaths, thisPaths)
       }
     }
   }
