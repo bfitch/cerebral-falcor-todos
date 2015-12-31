@@ -33,6 +33,8 @@
     "cerebral-addons": "^0.1.3",
     "cerebral-baobab": "^0.4.4",
     "cerebral-react": "^0.8.1",
+    "falcor-express": "^0.1.2",
+    "falcor-router": "^0.2.12",
     "react": "^0.14.3",
     "react-dom": "^0.14.3"
   },
