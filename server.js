@@ -13,7 +13,7 @@ const falcorExpress = require('falcor-express');
 const Router        = require('falcor-router');
 const bodyParser    = require('body-parser');
 const _             = require('underscore');
-let data            = require('./app/falcor_cache');
+let data            = require('./falcor_cache');
 
 const app = express();
 
