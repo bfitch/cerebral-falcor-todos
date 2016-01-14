@@ -6,11 +6,11 @@ import {Decorator as Cerebral} from 'cerebral-view-react';
 })
 export default class App extends React.Component {
   componentDidMount() {
-    this.props.signals.appMounted();
+    this.props.signals.todos.getTodos();
   }
   textEntered(event) {
     if (event.keyCode === 13) {
-      this.props.signals.todoTextEntered.sync({title: event.target.value});
+      this.props.signals.todos.createTodo({title: event.target.value});
       event.target.value = '';
     }
   }

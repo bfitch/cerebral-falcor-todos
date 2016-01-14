@@ -11,14 +11,12 @@ const controller = Controller(Model({}));
 
 controller.modules({
   todos: Todos(),
-//
-//   falcor: FalcorModule({
-//     source: '/model.json',
-//     model: model
-//   })
+  falcor: FalcorModule()
 });
 
 ReactDOM.render(
-  <div>Waaaaa</div>,
+  <Container controller={controller}>
+    <App/>
+  </Container>,
   document.getElementById('root')
 );
