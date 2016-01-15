@@ -1,13 +1,14 @@
-const getTodos = ({state, output, services}) => {
-  const length = state.get('todosLength') - 1;
-
-  services.falcor.get(['todos', {from: 0, to: length}, 'title']).
+const getTodosLength = ({output, services}) => {
+  services.falcor.get(['todosLength']).
     then(response => output(response.json)).
     catch(response => output.error);
 }
 
-const getTodosLength = ({output, services}) => {
-  services.falcor.get(['todosLength']).
+const getTodos = ({state, output, modules, services}) => {
+  const falcor = modules['cerebral-module-falcor'];
+  const length = falcor.state.get('todosLength') - 1;
+
+  services.falcor.get(['todos', {from: 0, to: length}, 'title']).
     then(response => output(response.json)).
     catch(response => output.error);
 }

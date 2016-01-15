@@ -2,7 +2,7 @@ import React from 'react';
 import {Decorator as Cerebral} from 'cerebral-view-react';
 
 @Cerebral({
-  todos: ['todos']
+  todos: ['falcor', 'todos']
 })
 export default class App extends React.Component {
   componentDidMount() {
