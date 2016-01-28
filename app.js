@@ -1,16 +1,25 @@
 import React from 'react';
 import {Decorator as Cerebral} from 'cerebral-view-react';
+import falcor from 'falcor';
+import HTTPDataSource from 'falcor-http-datasource';
 
-@Cerebral({
-  todos: ['falcor', 'todos']
-})
+@Cerebral((props) => ({
+  todos: ['todos']
+}))
 export default class App extends React.Component {
   componentDidMount() {
-    this.props.signals.todos.getTodos();
+    const source = new HTTPDataSource('/model.json');
+    this.model   = new falcor.Model({source});
+
+    this.model.get(['todos', {from: 0, to: 10}, 'title']).subscribe(data => {
+      this.props.signals.todos.setTodos({todos: data.json.todos});
+    });
   }
   textEntered(event) {
     if (event.keyCode === 13) {
-      this.props.signals.todos.createTodo({title: event.target.value});
+      this.model.call(['todos', 'add'], [event.target.value], ['title']).then(response => {
+        this.props.signals.todos.createTodo({todo: response.json.todos});
+      });
       event.target.value = '';
     }
   }

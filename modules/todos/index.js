@@ -1,17 +1,16 @@
-import {getTodos, getTodosLength, createTodo} from './actions';
-
 export default (options = {}) => {
   return (module) => {
-
     module.signals({
-      getTodos: [
-        [getTodosLength],
-        [getTodos]
-      ],
+      setTodos: [({input,state}) => {
+        state.set('todos', input.todos);
+      }]
     });
 
     module.signalsSync({
-      createTodo: [createTodo]
+      createTodo: [
+        ({input, state}) => {
+          state.merge('todos', input.todo);
+        }]
     });
   }
 }
