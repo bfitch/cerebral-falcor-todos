@@ -1,13 +1,13 @@
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react';
+import {Decorator as Cerebral} from 'cerebral-view-react';
+import {Decorator as Falcor} from '../cerebral-module-falcor/src/helpers/react';
+import {filter,map} from 'lodash';
 
-@Cerebral({
-  todos: ['todos']
-})
+@Cerebral()
+@Falcor([
+  `todos[0..50].title`
+])
 export default class App extends React.Component {
-  componentDidMount() {
-    this.props.signals.appMounted();
-  }
   textEntered(event) {
     if (event.keyCode === 13) {
       this.props.signals.todoTextEntered.sync({title: event.target.value});
@@ -15,24 +15,18 @@ export default class App extends React.Component {
     }
   }
   render() {
-    if (this.props.todos) {
-      const todos = Object.keys(this.props.todos).map((id) => {
-        return <li key={id}>{this.props.todos[id].title}</li>;
-      });
+    const {falcor} = this.props;
+    const todos = filter(falcor('todos',''), 'title');
 
+    if (todos) {
       return (
         <div>
           <input onKeyDown={this.textEntered.bind(this)} />
-          <ul>{todos}</ul>
+          <ul>{todos.map(todo => <li>{todo.title}</li>)}</ul>
         </div>
       );
     } else {
-      return (
-        <div>
-          <input />
-          <p>Loading</p>
-        </div>
-      );
+      return <h1>No Todos to display</h1>;
     }
   }
 }

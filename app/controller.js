@@ -1,7 +1,7 @@
 import Controller from 'cerebral';
-import Model from 'cerebral-baobab';
+import Model from 'cerebral-model-baobab';
 
 const model = Model({});
 const controller = Controller(model);
 
-export {controller, model};
+export default controller;
