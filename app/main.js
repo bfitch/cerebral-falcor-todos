@@ -4,7 +4,7 @@ import {Container} from 'cerebral-view-react';
 import controller from './controller';
 import App from './app';
 import Devtools from 'cerebral-module-devtools';
-import FalcorModule from '../cerebral-module-falcor/src';
+import FalcorModule from 'cerebral-module-falcor';
 import {createTodo} from './actions';
 
 controller.addModules({

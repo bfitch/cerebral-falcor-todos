@@ -1,6 +1,6 @@
 import React from 'react';
 import {Decorator as Cerebral} from 'cerebral-view-react';
-import {Decorator as Falcor} from '../cerebral-module-falcor/src/helpers/react';
+import {Decorator as Falcor} from 'cerebral-module-falcor';
 import {filter,map} from 'lodash';
 
 @Cerebral()
