@@ -22,7 +22,7 @@ export default class App extends React.Component {
       return (
         <div>
           <input onKeyDown={this.textEntered.bind(this)} />
-          <ul>{todos.map(todo => <li>{todo.title}</li>)}</ul>
+          <ul>{todos.map((todo, index) => <li key={index}>{todo.title}</li>)}</ul>
         </div>
       );
     } else {

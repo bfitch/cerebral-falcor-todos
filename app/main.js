@@ -9,7 +9,9 @@ import {createTodo} from './actions';
 
 controller.addModules({
   devtools: Devtools(),
-  falcor: FalcorModule()
+  falcor: FalcorModule({
+    dataSource: '/api/model.json'
+  })
 });
 
 controller.addSignals({

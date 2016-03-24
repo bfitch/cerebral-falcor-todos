@@ -3,7 +3,7 @@ const falcorExpress = require('falcor-express');
 const Router        = require('falcor-router');
 const bodyParser    = require('body-parser');
 const _             = require('lodash');
-const data          = require('../app/falcor_cache');
+const data          = require('../app/falcor_cache').default;
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -30,11 +30,12 @@ function buildPathSetResults(resource, index, attrs) {
   }, []);
 }
 
-app.use('/model.json', falcorExpress.dataSourceRoute(function(req, res) {
+app.use('/api/model.json', falcorExpress.dataSourceRoute(function(req, res) {
   return new Router([
     {
       route: "todos.add",
       call: (callPath, args) => {
+
         const title = args[0];
         const id = _.random(1,10000);
 
